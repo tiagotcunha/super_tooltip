@@ -98,6 +98,8 @@ class SuperTooltip {
   /// Let's you pass a key to the Tooltips cotainer for UI Testing
   final Key tooltipContainerKey;
 
+  final List<BoxShadow> shadow;
+
   Offset _targetCenter;
   OverlayEntry _backGroundOverlay;
   OverlayEntry _ballonOverlay;
@@ -133,6 +135,7 @@ class SuperTooltip {
     this.touchThroughAreaShape = ClipAreaShape.oval,
     this.touchThroughAreaCornerRadius = 5.0,
     this.touchThrougArea,
+    this.shadow,
   })  : assert(popupDirection != null),
         assert(content != null),
         assert((maxWidth ?? double.infinity) >= (minWidth ?? 0.0)),
@@ -156,8 +159,8 @@ class SuperTooltip {
   /// Displays the tooltip
   /// The center of [targetContext] is used as target of the arrow
   void show(BuildContext targetContext) {
-    final RenderBox renderBox = targetContext.findRenderObject();
-    final RenderBox overlay = Overlay.of(targetContext).context.findRenderObject();
+    final RenderBox renderBox = targetContext.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(targetContext).context.findRenderObject() as RenderBox;
 
     _targetCenter = renderBox.localToGlobal(renderBox.size.center(Offset.zero), ancestor: overlay);
 
@@ -245,7 +248,7 @@ class SuperTooltip {
         decoration: ShapeDecoration(
             color: backgroundColor,
             shadows: hasShadow
-                ? [BoxShadow(color: Colors.black54, blurRadius: 10.0, spreadRadius: 5.0)]
+                ? this.shadow ?? [BoxShadow(color: Colors.black54, blurRadius: 10.0, spreadRadius: 5.0)]
                 : null,
             shape: _BubbleShape(popupDirection, _targetCenter, borderRadius, arrowBaseWidth,
                 arrowTipDistance, borderColor, borderWidth, left, top, right, bottom)),
